@@ -3,3 +3,20 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+svg {
+  background-color: black;
+  background: url(space.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  cursor: none;
+}
+
+.collision {
+  border:3px solid red;
+  border-radius: 50%;
+}
+  
+.asteroid {
+}
