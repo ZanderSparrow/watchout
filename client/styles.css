@@ -20,7 +20,7 @@ html {
 
 
 body {
-  /*cursor: none;*/
+  cursor: none;
 }
 
 svg {
@@ -68,12 +68,24 @@ svg {
   left:0;
   bottom:0;
   right:0;
-  background-color: rgba(255,0,0,0.5);
   color:lightblue;
   font-size: 5em;
   z-index: 99;
   display: none;
   text-align: center; 
+}
+
+.message.killed {
+  background: 
+    linear-gradient(
+      rgba(255, 0, 0, 0.5), 
+      rgba(255, 0, 0, 0.5)
+    ),
+    url('skullnbones.png') no-repeat center center fixed;
+}
+
+.message.levelUp {
+  background-color: rgba(0,255,0,0.5);
 }
 
 .message div {

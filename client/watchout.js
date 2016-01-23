@@ -17,8 +17,8 @@ var lives = 5;
 var hero = {
   x:0,
   y:0,
-  width:100,
-  height:200
+  width:50,
+  height:100
 };
 var paused = false;
 
@@ -26,9 +26,13 @@ var levelTransition = function(transitionType) {
   paused = true;
 
   if (transitionType === 'up') {
-    showMessage('Level ' + level);
+    $('.message').removeClass('killed');
+    $('.message').addClass('levelUp');
+    showMessage('Level ' + level, false);
   } else {
-    showMessage(lives + ' lives left. Level 1');
+    $('.message').removeClass('levelUp');
+    $('.message').addClass('killed');
+    showMessage(lives + ' lives left.', true);
   }
 
   svg.selectAll('.asteroid')
@@ -49,17 +53,6 @@ var levelTransition = function(transitionType) {
       paused = false;            
     }, 1000);
   }, 1000);
-  // $('.asteroid').fadeOut(function() {
-  //   setTimeout(function() {
-  //     levelInit(level);
-  //     updateGraphics();
-  //     $('.asteroid').fadeIn(function() {
-  //       setTimeout(function(){
-  //         paused = false;            
-  //       }, 750);
-  //     });
-  //   }, 750);    
-  // });
 };
 
 var levelInit = function(level) {
@@ -71,14 +64,6 @@ var levelInit = function(level) {
     var dimension = Math.floor(Math.random() * 80 + 20);
     var xPos = Math.floor(Math.random() * (width - dimension));
     var yPos = Math.floor(Math.random() * (height - dimension));
-    
-    // avoid corner case where asteroid starts out of bounds
-    if (xPos + dimension > width) { 
-      xPos = width - dimension; 
-    }
-    if (yPos + dimension > height) { 
-      yPos = height - dimension; 
-    }
     
     var angle = Math.random() * 2 * Math.PI;
     var vel = Math.random() * 2 + level * 0.5;
@@ -147,8 +132,9 @@ var move = function(asteroid) {
   asteroid.y += asteroid.vy;
 };
 
-var showMessage = function(message) {
-  $('.message div').html(message);
+var showMessage = function(message, isKill) {
+  var messageClass = isKill ? '.killed' : '.levelUp';
+  $('.message' + messageClass + ' div').html(message);
   $('.message').show();
 };
 
@@ -167,7 +153,7 @@ var resetGame = function(asteroid) {
 
   $('.current span').html(score);
   level = 1;
-  levelTransition();
+  levelTransition('down');
 };
 
 var updateGraphics = function() {
