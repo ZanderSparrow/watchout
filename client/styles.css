@@ -20,13 +20,13 @@ html {
 
 
 body {
-  cursor: none;
+  /*cursor: none;*/
 }
 
 
 
 svg {
-  cursor: none;
+  /*cursor: none;*/
   margin: 0 auto;
   position: relative;
   z-index: 0;

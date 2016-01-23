@@ -1,6 +1,6 @@
 // start slingin' some d3 here.
 
-var width = $(window).width();
+var width = $(window).width() ;
 var height = $(window).height();
 
 var asteroids = [];
@@ -12,6 +12,8 @@ var collisions = 0;
 var score = 0;
 var highScore = 0;
 var level = 1;
+var lives = 5;
+
 var hero = {
   x:0,
   y:0,
@@ -141,7 +143,8 @@ var move = function(asteroid) {
 
 var resetGame = function(asteroid) {
   // Update collisions count on screen
-  $('.collisions span').html(collisions++);
+  lives--;
+  $('.lives span').html(lives);
   hero.collision = true;
   asteroid.collision = true;
   score = 0;
@@ -157,22 +160,21 @@ var updateGraphics = function() {
   .attr('y', function(d) { return d.y; });
 
   svg.selectAll(".border")
-  .attr("cx", function(d) { return d.x + d.width / 2; })
+  .attr("cx", function(d) { return d.x  + d.width / 2; })
   .attr("cy", function(d) { return d.y + d.height / 2; })
   .classed('collision', function(d) { return d.collision; });
 
 
-  svg.select('hero-border')
-  .attr("cx", hero.x + hero.width / 2 )
-  .attr("cy", hero.y + hero.height / 2)
-  .classed('.collision', hero.collision);
+  // svg.select('hero-border')
+  // .attr("cx", hero.x + hero.width / 2 )
+  // .attr("cy", hero.y + hero.height / 2)
+  // .classed('.collision', hero.collision);
 };
 
-var updatePos = function(doCollide, force) {
+var updatePos = function() {
 
-  doCollide = doCollide || true;
 
-  if (!paused || force) {
+  if (!paused) {
     // Update score on screen
     $('.current span').html(score++);
 
@@ -183,22 +185,24 @@ var updatePos = function(doCollide, force) {
     }
 
     // Update each asteroid
-    asteroids.forEach(function(asteroid) {
+    for (var i = 0; i < asteroids.length; i++) {
+      var asteroid = asteroids[i];
       bounceOffWalls(asteroid);
       move(asteroid);
 
-      // Check to see if collisions are allowed
-      if (doCollide) {
+
+
         if (radialCollision(hero, asteroid) && !asteroid.collision) {
+          updateGraphics();
           resetGame(asteroid);
+          return;
         } else {
           hero.collision = false;
           asteroid.collision = false;
         }
-      }
-    });
+    }
     // Update DOM with new position
-    updateGraphics();
+      updateGraphics();
 
     if ( score > 0 && score % 1000 === 0) {
       window.level ++;
@@ -218,8 +222,8 @@ var hasCollision = function(rect1, rect2)  {
 };
 
 var radialCollision = function(rect1, rect2) {
-  var dx = (rect1.x + rect1.width/2) - (rect2.x + rect2.width/2);
-  var dy = (rect1.y + rect1.height/2) - (rect2.y + rect2.height/2);
+  var dx = (rect1.x) - (rect2.x);
+  var dy = (rect1.y) - (rect2.y);
   var distance = Math.sqrt(dx * dx + dy * dy);
 
   return (distance < rect1.width / 2 + rect2.width / 2);
