@@ -2,20 +2,31 @@
 
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
+/* apply a natural box layout model to all elements, but allowing components to change */
 html {
-  background-color: black;
-}
-
-svg {
-  background-color: black;
+  box-sizing: border-box;
+    background-color: black;
   background: url(space.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  cursor: none;
 
+  font-family: 'Geo', sans-serif;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
+
+}
+
+svg {
+  cursor: none;
   margin: 0 auto;
+  position: relative;
+  z-index: 0;
 }
 
 .border, .hero-border {
@@ -33,4 +44,20 @@ svg {
 
 .board {
   text-align: center;
+}
+
+.scoreboard {
+  position: absolute;
+  top: 0;
+  height:2em;
+  color:lightblue;
+  text-align: center;
+
+  z-index: 5;
+}
+
+.scoreboard div {
+  display: inline-block;
+  margin: 0 auto;
+
 }

@@ -79,6 +79,8 @@
 
 
     svg.select('hero-border')
+      .attr("cx", hero.x + hero.width / 2 )
+      .attr("cy", hero.y + hero.height / 2)
       .classed('.collision', hero.collision);
   };
 
