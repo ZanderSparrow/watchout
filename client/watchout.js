@@ -5,17 +5,36 @@
 
   var asteroids = [];
   var minAsteroids = 5;
-  var maxAsteroids = 20;
+  var maxAsteroids = 10;
   var fps = 100;
   var svg;
   var collisions = 0;
   var score = 0;
   var highScore = 0;
   var level = 1;
+  var hero = {
+    x:0,
+    y:0,
+    width:100,
+    height:200
+  };
+  var paused = false;
 
+  var levelTransition = function() {
+    paused = true;
+    $('.asteroid').fadeOut(function() {
+      setTimeout(function() {
+        levelInit(level);        
+        $('.asteroid').fadeIn(function() {
+          setTimeout(function(){
+            paused = false;            
+          }, 750);
+        });
+      }, 750);    
+    });
+  };
 
 var levelInit = function(level) {
-
   asteroids = [];
   window.level = level;
   $('.level span').html(level);
@@ -34,14 +53,14 @@ var levelInit = function(level) {
     }
     
     var angle = Math.random() * 2 * Math.PI;
-    var vel = Math.random() * 2 + 2;
+    var vel = Math.random() * 2 + level * 0.5;
     asteroids.push( {
       x: xPos,
       y: yPos,
       width: dimension,
       height: dimension,
-      vx : Math.floor(vel * Math.cos(angle)),
-      vy : Math.floor(vel * Math.sin(angle))
+      vx : vel * Math.cos(angle),
+      vy : vel * Math.sin(angle)
     });
   }
   populateAsteroids();
@@ -88,66 +107,63 @@ var populateAsteroids = function() {
 
 
 
-  var hero = {
-    x:0,
-    y:0,
-    width:100,
-    height:200
-  };
 
   var updatePos = function() {
+    if (!paused) {
 
-    $('.current span').html(score++);
-    if(score > highScore) {
-      highScore = score;
-      $('.highscore span').html(highScore);
+      $('.current span').html(score++);
+      if(score > highScore) {
+        highScore = score;
+        $('.highscore span').html(highScore);
+      }
+      asteroids.forEach(function(asteroid) {
+        if ((asteroid.x) < 0 || (asteroid.x + asteroid.width) > width) {
+          asteroid.vx *= -1;
+        }
+        if ((asteroid.y) < 0 || (asteroid.y + asteroid.height) > height) {
+          asteroid.vy *= -1;
+        }
+        asteroid.x += asteroid.vx;
+        asteroid.y += asteroid.vy;
+
+        if (radialCollision(hero, asteroid) && !asteroid.collision) {
+          $('.collisions span').html(collisions++);
+          hero.collision = true;
+          asteroid.collision = true;
+          score = 0;
+
+          $('.current span').html(score);
+          level = 1;
+          levelTransition();
+
+        } else {
+          hero.collision = false;
+          asteroid.collision = false;
+        }
+      });
+
+
+      svg.selectAll(".asteroid")
+        .attr('x', function(d) { return d.x; })
+        .attr('y', function(d) { return d.y; });
+      
+      svg.selectAll(".border")
+      .attr("cx", function(d) { return d.x + d.width / 2; })
+      .attr("cy", function(d) { return d.y + d.height / 2; })
+        .classed('collision', function(d) { return d.collision; });
+
+
+      svg.select('hero-border')
+        .attr("cx", hero.x + hero.width / 2 )
+        .attr("cy", hero.y + hero.height / 2)
+        .classed('.collision', hero.collision);
+
+
+    if ( score > 0 && score % 1000 === 0) {
+      window.level ++;
+      levelTransition();
     }
-    asteroids.forEach(function(asteroid) {
-      if ((asteroid.x) < 0 || (asteroid.x + asteroid.width) > width) {
-        asteroid.vx *= -1;
-      }
-      if ((asteroid.y) < 0 || (asteroid.y + asteroid.height) > height) {
-        asteroid.vy *= -1;
-      }
-      asteroid.x += asteroid.vx;
-      asteroid.y += asteroid.vy;
-
-      if (radialCollision(hero, asteroid) && !asteroid.collision) {
-        $('.collisions span').html(collisions++);
-        hero.collision = true;
-        asteroid.collision = true;
-        score = 0;
-        $('.current span').html(score);
-            levelInit(1);
-            
-
-      } else {
-        hero.collision = false;
-        asteroid.collision = false;
-      }
-    });
-
-
-    svg.selectAll(".asteroid")
-      .attr('x', function(d) { return d.x; })
-      .attr('y', function(d) { return d.y; });
-    
-    svg.selectAll(".border")
-    .attr("cx", function(d) { return d.x + d.width / 2; })
-    .attr("cy", function(d) { return d.y + d.height / 2; })
-      .classed('collision', function(d) { return d.collision; });
-
-
-    svg.select('hero-border')
-      .attr("cx", hero.x + hero.width / 2 )
-      .attr("cy", hero.y + hero.height / 2)
-      .classed('.collision', hero.collision);
-
-
-  if ( score > 0 && score % 1000 === 0) {
-    levelInit(window.level + 1);
   }
-
 };
 
 
