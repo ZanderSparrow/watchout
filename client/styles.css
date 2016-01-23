@@ -62,5 +62,26 @@ svg {
 
 .scoreboard > span {
   margin: 2em;
+}
 
+.message {
+  position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  background-color: rgba(255,0,0,0.5);
+  color:lightblue;
+  font-size: 5em;
+  z-index: 99;
+  display: none;
+  text-align: center;
+   
+}
+
+.message div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

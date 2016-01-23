@@ -22,8 +22,14 @@ var hero = {
 };
 var paused = false;
 
-var levelTransition = function() {
+var levelTransition = function(transitionType) {
   paused = true;
+
+  if (transitionType === 'up') {
+    showMessage('Level ' + level);
+  } else {
+    showMessage(lives + ' lives left. Level 1');
+  }
 
   svg.selectAll('.asteroid')
   .transition()
@@ -33,7 +39,7 @@ var levelTransition = function() {
   setTimeout(function() {
     levelInit(level);
     updateGraphics();
-
+    hideMessage();
     svg.selectAll('.asteroid')
     .transition()
     .duration(250)
@@ -141,6 +147,16 @@ var move = function(asteroid) {
   asteroid.y += asteroid.vy;
 };
 
+var showMessage = function(message) {
+  $('.message div').html(message);
+  $('.message').show();
+};
+
+
+var hideMessage = function() {
+  $('.message').hide();
+};
+
 var resetGame = function(asteroid) {
   // Update collisions count on screen
   lives--;
@@ -193,7 +209,6 @@ var updatePos = function() {
 
 
         if (radialCollision(hero, asteroid) && !asteroid.collision) {
-          updateGraphics();
           resetGame(asteroid);
           return;
         } else {
@@ -206,7 +221,7 @@ var updatePos = function() {
 
     if ( score > 0 && score % 1000 === 0) {
       window.level ++;
-      levelTransition();
+      levelTransition('up');
     }
   }
 };
