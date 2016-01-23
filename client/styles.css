@@ -5,15 +5,15 @@ Feel free to use it if you like. */
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
   box-sizing: border-box;
-    background-color: black;
-  background: url(space.jpg) no-repeat center center fixed; 
+  /*background-color: black;*/
+  background: url(deepspace.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-
   font-family: 'Geo', sans-serif;
 }
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -23,8 +23,6 @@ body {
   /*cursor: none;*/
 }
 
-
-
 svg {
   /*cursor: none;*/
   margin: 0 auto;
@@ -33,13 +31,13 @@ svg {
 }
 
 .border, .hero-border {
-    stroke:none; 
-    fill:none;   
+  stroke:none; 
+  fill:none;   
 }
 
 .collision {
-    stroke:red; 
-    fill:red;   
+  stroke:red; 
+  fill:red;   
 }
   
 .asteroid {
@@ -75,8 +73,7 @@ svg {
   font-size: 5em;
   z-index: 99;
   display: none;
-  text-align: center;
-   
+  text-align: center; 
 }
 
 .message div {
