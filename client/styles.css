@@ -19,8 +19,11 @@ html {
 }
 
 
-
+body {
+  cursor: none;
 }
+
+
 
 svg {
   cursor: none;
@@ -49,15 +52,15 @@ svg {
 .scoreboard {
   position: absolute;
   top: 0;
+  width: 100%;
+  font-size: 2em;
   height:2em;
   color:lightblue;
   text-align: center;
-
   z-index: 5;
 }
 
-.scoreboard div {
-  display: inline-block;
-  margin: 0 auto;
+.scoreboard > span {
+  margin: 2em;
 
 }
