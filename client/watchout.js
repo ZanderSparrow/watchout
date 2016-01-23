@@ -17,8 +17,8 @@ var lives = 5;
 var hero = {
   x:0,
   y:0,
-  width:50,
-  height:100
+  width:75,
+  height:50
 };
 var paused = false;
 
@@ -146,13 +146,19 @@ var hideMessage = function() {
 var resetGame = function(asteroid) {
   // Update collisions count on screen
   lives--;
+
+  // If all is lost result game
+  if(lives < 0) {
+    level = 1;
+    lives = 5;
+  }
+
   $('.lives span').html(lives);
   hero.collision = true;
   asteroid.collision = true;
   score = 0;
 
   $('.current span').html(score);
-  level = 1;
   levelTransition('down');
 };
 
@@ -242,10 +248,10 @@ $( document ).ready( function() {
 
 
   svg.append('svg:image')
-  .attr("xlink:href","kodos.png")
+  .attr("xlink:href","toastcat.png")
   .attr('class', 'hero')
-  .attr('width', 50)
-  .attr('height', 100);
+  .attr('width', 150)
+  .attr('height', 75);
 
   svg.on("mousemove", function() { 
     var mousePos = d3.mouse(this); 
