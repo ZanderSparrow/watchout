@@ -2,6 +2,9 @@
 
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
+html {
+  background-color: black;
+}
 
 svg {
   background-color: black;
@@ -11,12 +14,23 @@ svg {
   -o-background-size: cover;
   background-size: cover;
   cursor: none;
+
+  margin: 0 auto;
+}
+
+.border, .hero-border {
+    stroke:none; 
+    fill:none;   
 }
 
 .collision {
-  border:3px solid red;
-  border-radius: 50%;
+    stroke:red; 
+    fill:red;   
 }
   
 .asteroid {
+}
+
+.board {
+  text-align: center;
 }
