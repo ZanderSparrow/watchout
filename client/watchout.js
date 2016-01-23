@@ -1,7 +1,9 @@
 // start slingin' some d3 here.
 
-var width = $(window).width() ;
-var height = $(window).height();
+
+
+var width;
+var height;
 
 var asteroids = [];
 var minAsteroids = 5;
@@ -12,27 +14,34 @@ var collisions = 0;
 var score = 0;
 var highScore = 0;
 var level = 1;
-var lives = 5;
+var startingLives = 5;
+var lives = startingLives;
 
 var hero = {
   x:0,
   y:0,
-  width:75,
+  width:150,
   height:50
 };
+
 var paused = false;
 
 var levelTransition = function(transitionType) {
   paused = true;
 
+
   if (transitionType === 'up') {
-    $('.message').removeClass('killed');
-    $('.message').addClass('levelUp');
-    showMessage('Level ' + level, false);
+    $('.message').removeClass().addClass('message levelUp');
+    showMessage('level ' + level);
+  } else if (lives < 0) {
+    transitionType = 'over';
+    level = 1;
+    lives = startingLives;
+    $('.message').removeClass().addClass('message killed');
+    showMessage('GAME OVER');
   } else {
-    $('.message').removeClass('levelUp');
-    $('.message').addClass('killed');
-    showMessage(lives + ' lives left.', true);
+  $('.message').removeClass().addClass('message killed');
+    showMessage(lives + ' lives left');
   }
 
   svg.selectAll('.asteroid')
@@ -41,17 +50,22 @@ var levelTransition = function(transitionType) {
   .style('opacity', 0);
   
   setTimeout(function() {
-    levelInit(level);
-    updateGraphics();
-    hideMessage();
-    svg.selectAll('.asteroid')
-    .transition()
-    .duration(250)
-    .style('opacity', 1.0);
-    
-    setTimeout(function(){
-      paused = false;            
-    }, 1000);
+
+    if (transitionType === 'over') {
+      startScreen();
+    } else {
+      levelInit(level);
+      updateGraphics();
+      hideMessage();
+      svg.selectAll('.asteroid')
+      .transition()
+      .duration(250)
+      .style('opacity', 1.0);
+      
+      setTimeout(function(){
+        paused = false;            
+      }, 1000);
+    }
   }, 1000);
 };
 
@@ -79,6 +93,19 @@ var levelInit = function(level) {
   populateAsteroids();
 };
 
+
+var startScreen = function() {
+  $('.start-button').show();
+  paused = true;
+  $('.message').removeClass().addClass('message start-screen');
+  showMessage('READY PLAYER 1');
+  $('.start-button').on('click', function() {
+    level = 1;
+    levelTransition("up");
+    $('.start-button').hide();
+  });
+
+};
 
 var populateAsteroids = function() {
   // Data Join
@@ -133,8 +160,8 @@ var move = function(asteroid) {
 };
 
 var showMessage = function(message, isKill) {
-  var messageClass = isKill ? '.killed' : '.levelUp';
-  $('.message' + messageClass + ' div').html(message);
+  // var messageClass = isKill ? '.killed' : '.levelUp';
+  $('.message-text').html(message);
   $('.message').show();
 };
 
@@ -147,11 +174,6 @@ var resetGame = function(asteroid) {
   // Update collisions count on screen
   lives--;
 
-  // If all is lost result game
-  if(lives < 0) {
-    level = 1;
-    lives = 5;
-  }
 
   $('.lives span').html(lives);
   hero.collision = true;
@@ -238,13 +260,17 @@ var radialCollision = function(rect1, rect2) {
 
 $( document ).ready( function() {
 
+  width = $('body').width() ;
+  height = $('body').height();
 
 
   svg = d3.select( ".board" ).append( "svg" )
   .attr( "width", width )
   .attr( "height", height );
 
-  levelInit(level);
+
+  startScreen();
+  // levelInit(level);
 
 
   svg.append('svg:image')
