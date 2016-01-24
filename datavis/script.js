@@ -67,10 +67,10 @@ var getMax = function(obj, key) {
     
     var colorScale = d3.scale.linear()
       .domain([getMin(dataset, 'spending'), getMax(dataset, 'spending')])
-      .range(["white", "black"]);
+      .range(["white", "#cc00cc"]);
 
     var states = d3.selectAll('.state');
-    
+    var offset = $('svg').offset().top;
     states.transition(200)
     .attr('fill', function(d){
       var stateData = dataset[this.id];
@@ -89,7 +89,7 @@ var getMax = function(obj, key) {
         })
         .style("top", function() {
           // var centroid = getCentroid(this);
-          return centroid[1] + 50 + "px";
+          return centroid[1] + offset + "px";
         })
       .on("mouseout", function(d) {
         toolTip.transition()
@@ -98,4 +98,7 @@ var getMax = function(obj, key) {
       });
     });
   };
+
+
+
 });
