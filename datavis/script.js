@@ -7,25 +7,33 @@ $(function(){
   .attr('class', 'tooltip')
   .style('opacity', 0);
 
-  function getCentroid(selection) {
+  function getCentroid(element) {
     // get the DOM element from a D3 selection
     // you could also use "this" inside .each()
-    var element = selection.node(),
+    // var element = selection.node(),
         // use the native SVG interface to get the bounding box
         bbox = element.getBBox();
     // return the center of the bounding box
     return [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
   }
 
-  $.ajax({
+  var loadData = function(filePath) {
+    $.ajax({
     type: "GET",
-    url: "US_PER_CAPITA09.CSV",
+    url: filePath,
     dataType: "text",
     success: function(data) { 
             dat3 = d3.csv.parse(data);
             procesData(dat3);
           }
+    });
+  };
+  $('select').on('change', function() {
+    var filename = $(this).find('option:selected').val();
+    loadData(filename);
   });
+
+loadData('US_PER_CAPITA09.CSV');  
 
 var getMin = function(obj, key) {
   var min = Infinity;
@@ -62,22 +70,27 @@ var getMax = function(obj, key) {
       .range(["white", "black"]);
 
     var states = d3.selectAll('.state');
-
-    states.attr('fill', function(d){
+    
+    states.transition(200)
+    .attr('fill', function(d){
       var stateData = dataset[this.id];
       return colorScale(stateData.spending);
-    })
-    .on("mouseover", function(d) {
+    });
+
+    states.on("mouseover", function(d) {
       var stateData = dataset[this.id];
+      var centroid = getCentroid(this);
       toolTip.transition()
         .duration(300)
         .style("opacity", 0.9);
       toolTip.html(stateData.state + ": $" + stateData.spending)
         .style("left", function() {
-          // var centroid = getCentroid(this);
-          return(d3.event.pageX) + "px";
+          return centroid[0] + "px";
         })
-        .style("top", (d3.event.pageY - 28) + "px")
+        .style("top", function() {
+          // var centroid = getCentroid(this);
+          return centroid[1] + 50 + "px";
+        })
       .on("mouseout", function(d) {
         toolTip.transition()
           .duration(500)
